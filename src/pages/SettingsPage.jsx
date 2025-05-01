@@ -2,6 +2,18 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const SettingsPage = () => {
+  // Hàm sanitize input
+  const sanitizeInput = (input) => {
+    if (!input) return "";
+    return input
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Loại bỏ script tags
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "") // Loại bỏ iframe tags
+      .replace(/javascript:/gi, "") // Loại bỏ javascript: protocol
+      .replace(/on\w+="[^"]*"/gi, "") // Loại bỏ các event handlers
+      .replace(/on\w+='[^']*'/gi, ""); // Loại bỏ các event handlers
+    //   .trim(); // Loại bỏ khoảng trắng thừa
+  };
+
   const [formData, setFormData] = useState({
     hotelName: "",
     phoneNumber: "",
@@ -39,7 +51,7 @@ const SettingsPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: sanitizeInput(value) });
   };
 
   const handleFileChange = (e) => {
@@ -69,9 +81,9 @@ const SettingsPage = () => {
     e.preventDefault();
 
     const formDataToSend = new FormData();
-    formDataToSend.append("hotel_name", formData.hotelName);
-    formDataToSend.append("phone_number", formData.phoneNumber);
-    formDataToSend.append("address", formData.address);
+    formDataToSend.append("hotel_name", sanitizeInput(formData.hotelName));
+    formDataToSend.append("phone_number", sanitizeInput(formData.phoneNumber));
+    formDataToSend.append("address", sanitizeInput(formData.address));
 
     if (formData.logo) {
       formDataToSend.append("logo", formData.logo);
