@@ -14,6 +14,7 @@ import { useEffect } from 'react'
 import CustomerPage from './pages/CustomerPage'
 import SettingsPage from './pages/SettingsPage'
 import CreateFaqForm from './pages/Faq/CreateFaqForm'
+import EditFaqForm from './pages/Faq/EditFaqForm'
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
 
         <Route path="faq" element={<Faq />} />
         <Route path="faq/create" element={<CreateFaqForm />} />
+        <Route path="faq/edit/:id" element={<EditFaqForm />} />
         <Route path="room" element={<Room />} />
         <Route path="booki  ng" element={<Booking />} />
         <Route path="system" element={<System />} />

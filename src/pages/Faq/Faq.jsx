@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'simple-datatables'
 import { fetchAllFaqsAPI } from '~/apis'
+import { FiEdit } from 'react-icons/fi'
 
 function Faq() {
   const tableRef = useRef(null)
@@ -101,6 +102,7 @@ function Faq() {
                   <th>Answer</th>
                   <th>Created At</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,6 +117,11 @@ function Faq() {
                         ? <span className="badge bg-success">Active</span>
                         : <span className="badge bg-danger">Inactive</span>
                       }
+                    </td>
+                    <td className='text-right'>
+                      <div>
+                        <FiEdit style={{ cursor: 'pointer' }} />
+                      </div>
                     </td>
                   </tr>
                 ))}
