@@ -11,6 +11,8 @@ const SettingsPage = () => {
   });
 
   const [isSubmited, setIsSubmited] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     axios
@@ -41,7 +43,26 @@ const SettingsPage = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, logo: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      // Kiểm tra kích thước file (ví dụ: tối đa 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size should be less than 5MB");
+        return;
+      }
+
+      // Kiểm tra định dạng file
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Only JPG, PNG and GIF files are allowed");
+        return;
+      }
+
+      // Tạo URL preview cho ảnh
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+      setFormData({ ...formData, logo: file });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -51,6 +72,7 @@ const SettingsPage = () => {
     formDataToSend.append("hotel_name", formData.hotelName);
     formDataToSend.append("phone_number", formData.phoneNumber);
     formDataToSend.append("address", formData.address);
+
     if (formData.logo) {
       formDataToSend.append("logo", formData.logo);
     }
@@ -60,16 +82,40 @@ const SettingsPage = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
       })
       .then((response) => {
         console.log("API Response:", response.data);
         setIsSubmited(true);
+        setUploadProgress(0);
+
+        // Cập nhật đường dẫn ảnh mới nếu có
+        if (response.data.logo_path) {
+          setFormData((prev) => ({
+            ...prev,
+            currentLogoPath: `http://localhost/public/uploads/${response.data.logo_path}`,
+          }));
+        }
       })
       .catch((error) => {
-        console.log("API Response:", JSON.stringify(error));
         console.error("API Error:", error.response?.data || error.message);
+        alert("Error uploading file. Please try again.");
       });
   };
+
+  // Cleanup preview URL khi component unmount
+  useEffect(() => {
+    return () => {
+      if (previewImage) {
+        URL.revokeObjectURL(previewImage);
+      }
+    };
+  }, [previewImage]);
 
   return (
     <div className="section">
@@ -137,16 +183,23 @@ const SettingsPage = () => {
                     <label htmlFor="logo" className="form-label">
                       Logo:
                     </label>
-                    {formData.currentLogoPath && (
-                      <div className="mb-2">
+                    <div className="mb-2">
+                      {previewImage ? (
+                        <img
+                          src={previewImage}
+                          alt="Preview"
+                          className="img-thumbnail"
+                          style={{ maxWidth: "200px" }}
+                        />
+                      ) : formData.currentLogoPath ? (
                         <img
                           src={formData.currentLogoPath}
                           alt="Current Logo"
                           className="img-thumbnail"
                           style={{ maxWidth: "200px" }}
                         />
-                      </div>
-                    )}
+                      ) : null}
+                    </div>
                     <input
                       type="file"
                       id="logo"
@@ -156,15 +209,36 @@ const SettingsPage = () => {
                       className="form-control"
                     />
                     <small className="form-text text-muted">
-                      Leave empty to keep current logo
+                      Leave empty to keep current logo. Maximum file size: 5MB.
+                      Allowed formats: JPG, PNG, GIF
                     </small>
+                    {uploadProgress > 0 && uploadProgress < 100 && (
+                      <div className="progress mt-2">
+                        <div
+                          className="progress-bar progress-bar-striped progress-bar-animated"
+                          role="progressbar"
+                          style={{ width: `${uploadProgress}%` }}
+                          aria-valuenow={uploadProgress}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          {uploadProgress}%
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="col-12">
                   <div className="d-flex justify-content-end">
-                    <button type="submit" className="btn btn-primary">
-                      Submit
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={uploadProgress > 0 && uploadProgress < 100}
+                    >
+                      {uploadProgress > 0 && uploadProgress < 100
+                        ? "Uploading..."
+                        : "Submit"}
                     </button>
                   </div>
                 </div>
