@@ -38,8 +38,18 @@ const sidebarItems = [
   },
   {
     'name': 'FAQs',
-    'url': '/faq',
-    'icon': <FaQuestion />
+    'key': '/faq',
+    'icon': <FaQuestion />,
+    'submenu': [
+      {
+        'name': 'Main',
+        'url': '/faq'
+      },
+      {
+        'name': 'Create Faq',
+        'url': '/faq/create'
+      }
+    ]
   },
   {
     'name': 'System',
@@ -232,12 +242,12 @@ function Sidebar() {
         </div>
         <div className="sidebar-menu">
           <ul className="menu">
-            {sidebarItems.map((sidebarItem) => (
-              <>
+            {sidebarItems.map((sidebarItem, index) => (
+              <div key={index}>
                 {sidebarItem.isTitle
                   ? <li className="sidebar-title">{sidebarItem.name}</li>
                   : <li
-                    className={`sidebar-item ${(sidebarItem.url == pathname) ? 'active': ''}${sidebarItem?.submenu?.length > 0 ? 'has-sub' : ''}`}>
+                    className={`sidebar-item ${(sidebarItem.url === pathname || pathname.startsWith(sidebarItem.key)) ? 'active' : ''} ${sidebarItem?.submenu?.length > 0 ? 'has-sub' : ''}`}>
                     <Link to={sidebarItem.url!==undefined ? sidebarItem.url : '#'} className='sidebar-link'>
                       {sidebarItem.icon}
                       <span>{sidebarItem.name}</span>
@@ -245,7 +255,7 @@ function Sidebar() {
                     {sidebarItem.submenu?.length > 0 && (
                       <ul className='submenu'>
                         {sidebarItem.submenu?.map((sub, index) => (
-                          <li key={index} className={`submenu-item ${sub.url == pathname && 'active'} ${sub?.submenu?.length > 0 && 'has-sub'}`}>
+                          <li key={index} className={`submenu-item ${(sub.url === pathname) && 'active'} ${sub?.submenu?.length > 0 && 'has-sub'}`}>
                             <Link to={sub.url} className="submenu-link">{sub.name}</Link>
                             {sub?.submenu?.length > 0 && (
                               <ul className='submenu submenu-level-2'>
@@ -262,7 +272,7 @@ function Sidebar() {
                     )}
                   </li>
                 }
-              </>
+              </div>
             ))}
           </ul>
         </div>
