@@ -2,12 +2,14 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import clsx from 'clsx'
-import { createFaqAPI } from '~/apis'
-import { useNavigate } from 'react-router-dom'
+import { updateFaqAPI } from '~/apis'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Toast } from '~/utils/toast'
 
 function EditFaqForm() {
   const navigate = useNavigate()
+  const faq = useLocation().state.faq
+
   const formSchema = z.object({
     question: z.string().min(1, { message: 'This field is required!' }),
     answer: z.string().min(1, { message: 'This field is required!' }),
@@ -18,17 +20,17 @@ function EditFaqForm() {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      answer: '',
-      question: '',
-      status: 'active'
+      answer: faq.answer,
+      question: faq.question,
+      status: faq.status
     }
   })
 
   const handleEditFaq = (data) => {
-    createFaqAPI(data).then(() => {
+    updateFaqAPI({ ...data, id: faq.id }).then(() => {
       Toast.fire({
         icon: 'success',
-        text: 'Create Successfully!'
+        text: 'Update Successfully!'
       })
       navigate('/faq')
     })

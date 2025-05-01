@@ -32,8 +32,9 @@ function App() {
         <Route path="faq" element={<Faq />} />
         <Route path="faq/create" element={<CreateFaqForm />} />
         <Route path="faq/edit/:id" element={<EditFaqForm />} />
+
         <Route path="room" element={<Room />} />
-        <Route path="booki  ng" element={<Booking />} />
+        <Route path="booking" element={<Booking />} />
         <Route path="system" element={<System />} />
         <Route path="customer" element={<CustomerPage />} />
         <Route path="settings" element={<SettingsPage />} />

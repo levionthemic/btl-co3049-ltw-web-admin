@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'simple-datatables'
-import { fetchAllFaqsAPI } from '~/apis'
+import { deleteFaqAPI, fetchAllFaqsAPI } from '~/apis'
 import { FiEdit } from 'react-icons/fi'
+import { RiDeleteBin3Line } from 'react-icons/ri'
+import Swal from 'sweetalert2'
+import { Toast } from '~/utils/toast'
 
 function Faq() {
   const tableRef = useRef(null)
@@ -18,7 +21,7 @@ function Faq() {
     if (!tableRef.current || !data) return
 
     if (dataTableRef.current) {
-      dataTableRef.current.destroy()
+      dataTableRef?.current?.destroy()
       dataTableRef.current = null
     }
 
@@ -57,6 +60,43 @@ function Faq() {
     dataTable.on('datatable.init', () => {
       adaptPageDropdown()
       refreshPagination()
+
+      dataTable.wrapper.addEventListener('click', function (e) {
+        const target = e.target
+        if (target.matches('.edit-icon')) {
+          const row = target.closest('tr')
+          const id = row?.querySelector('td')?.textContent
+          navigate(`/faq/edit/${id}`, { state: { faq: data.find(d => d.id === id) } })
+        }
+
+        if (target.matches('.delete-icon')) {
+          const row = target.closest('tr')
+          const id = row?.querySelector('td')?.textContent
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'primary',
+            cancelButtonColor: 'secondary',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              deleteFaqAPI(id).then((res) => {
+                if (!res.error) {
+                  navigate(0)
+                  Toast.fire({
+                    title: 'Deleted!',
+                    text: 'Your FAQ has been deleted.',
+                    icon: 'success'
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
     })
     dataTable.on('datatable.update', refreshPagination)
     dataTable.on('datatable.sort', refreshPagination)
@@ -119,8 +159,9 @@ function Faq() {
                       }
                     </td>
                     <td className='text-right'>
-                      <div>
-                        <FiEdit style={{ cursor: 'pointer' }} />
+                      <div className='d-flex align-items-center justify-content-center gap-2'>
+                        <FiEdit className="edit-icon text-warning" style={{ cursor: 'pointer' }} />
+                        <RiDeleteBin3Line className="delete-icon text-danger" style={{ cursor: 'pointer' }} />
                       </div>
                     </td>
                   </tr>

@@ -41,3 +41,13 @@ export const createFaqAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/api/faq/add`, data)
   return response
 }
+
+export const updateFaqAPI = async (data) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/api/faq/edit`, data)
+  return response
+}
+
+export const deleteFaqAPI = async (faqId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/api/faq/delete/${faqId}`)
+  return response
+}
