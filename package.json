@@ -13,6 +13,7 @@
     "@ckeditor/ckeditor5-build-classic": "^32.0.0",
     "@fontsource/nunito": "^4.5.11",
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@hookform/resolvers": "^5.0.1",
     "@icon/dripicons": "^2.0.0-alpha.3",
     "apexcharts": "^4.0.0",
     "axios": "^1.9.0",
@@ -20,6 +21,7 @@
     "bootstrap-icons": "^1.10.5",
     "chart.js": "^4.1.1",
     "choices.js": "^10.2.0",
+    "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
     "datatables.net": "^1.13.1",
     "datatables.net-bs5": "^1.13.1",
@@ -45,6 +47,7 @@
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.1",
     "react-icons": "^5.5.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^7.5.3",
@@ -53,7 +56,8 @@
     "summernote": "^0.9.1",
     "sweetalert2": "^11.6.13",
     "tinymce": "^7.8.0",
-    "toastify-js": "^1.12.0"
+    "toastify-js": "^1.12.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
