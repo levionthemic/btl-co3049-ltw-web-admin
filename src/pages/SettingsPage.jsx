@@ -1,19 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import sanitizeInput from "../utils/inputSanitizer.js";
 
 const SettingsPage = () => {
-  // Hàm sanitize input
-  const sanitizeInput = (input) => {
-    if (!input) return "";
-    return input
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Loại bỏ script tags
-      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "") // Loại bỏ iframe tags
-      .replace(/javascript:/gi, "") // Loại bỏ javascript: protocol
-      .replace(/on\w+="[^"]*"/gi, "") // Loại bỏ các event handlers
-      .replace(/on\w+='[^']*'/gi, ""); // Loại bỏ các event handlers
-    //   .trim(); // Loại bỏ khoảng trắng thừa
-  };
-
   const [formData, setFormData] = useState({
     hotelName: "",
     phoneNumber: "",
@@ -133,7 +122,7 @@ const SettingsPage = () => {
     <div className="section">
       <div className="card">
         <div className="card-header">
-          <h4 className="card-title">Settings</h4>
+          <h4 className="card-title">Hotel Settings</h4>
         </div>
         <div className="card-body">
           {!isSubmited ? (

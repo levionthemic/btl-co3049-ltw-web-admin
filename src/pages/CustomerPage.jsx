@@ -12,9 +12,9 @@ const CustomerPage = () => {
     const fetchContacts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost/public/api/contacts?page=${currentPage}&limit=${rowsPerPage}`
+          `http://localhost/api/contacts?page=${currentPage}&limit=${rowsPerPage}`
         );
-        alert(JSON.stringify(response.data, null, 2));
+        // alert(JSON.stringify(response.data, null, 2));
         setContacts(response.data.contacts);
         setTotalContacts(response.data.total_contacts);
       } catch (error) {
@@ -29,7 +29,7 @@ const CustomerPage = () => {
   const handleMarkAsRead = async (id) => {
     try {
       // Update the status to "read"
-      await axios.put(`http://localhost/public/api/contacts/${id}`, {
+      await axios.put(`http://localhost/api/contacts/${id}`, {
         status: "read",
       });
       // Update the local state
@@ -46,7 +46,7 @@ const CustomerPage = () => {
   const handleMarkAsResponded = async (id) => {
     try {
       // Update the status to "responded"
-      await axios.put(`http://localhost/public/api/contacts/${id}`, {
+      await axios.put(`http://localhost/api/contacts/${id}`, {
         status: "responded",
       });
       // Update the local state
@@ -63,7 +63,10 @@ const CustomerPage = () => {
   const handleDelete = async (id) => {
     try {
       // Delete the contact
-      await axios.delete(`http://localhost/public/api/contacts/${id}`);
+      const response = await axios.delete(
+        `http://localhost/api/contacts/${id}`
+      );
+      alert(JSON.stringify(response.data, null, 2));
       // Update the local state
       setContacts((prevContacts) =>
         prevContacts.filter((contact) => contact.id !== id)
@@ -121,48 +124,56 @@ const CustomerPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {contacts.map((contact) => (
-                  <tr key={contact.id}>
-                    <td>{contact.name}</td>
-                    <td>{contact.email}</td>
-                    <td>{contact.message}</td>
-                    <td>
-                      <span
-                        className={`badge bg-${
-                          contact.status === "unread" ? "warning" : "success"
-                        }`}
-                      >
-                        {contact.status}
-                      </span>
-                    </td>
-                    <td>
-                      {contact.status === "unread" && (
-                        <button
-                          onClick={() => handleMarkAsRead(contact.id)}
-                          className="btn btn-primary btn-sm"
+                {contacts.length > 0 ? (
+                  contacts.map((contact) => (
+                    <tr key={contact.id}>
+                      <td>{contact.name}</td>
+                      <td>{contact.email}</td>
+                      <td>{contact.message}</td>
+                      <td>
+                        <span
+                          className={`badge bg-${
+                            contact.status === "unread" ? "warning" : "success"
+                          }`}
                         >
-                          Mark as Read
-                        </button>
-                      )}
-                      {contact.status === "read" && (
+                          {contact.status}
+                        </span>
+                      </td>
+                      <td>
+                        {contact.status === "unread" && (
+                          <button
+                            onClick={() => handleMarkAsRead(contact.id)}
+                            className="btn btn-primary btn-sm"
+                          >
+                            Mark as Read
+                          </button>
+                        )}
+                        {contact.status === "read" && (
+                          <button
+                            onClick={() => handleMarkAsResponded(contact.id)}
+                            className="btn btn-success btn-sm"
+                          >
+                            Mark as Responded
+                          </button>
+                        )}
+                      </td>
+                      <td>
                         <button
-                          onClick={() => handleMarkAsResponded(contact.id)}
-                          className="btn btn-success btn-sm"
+                          onClick={() => handleDelete(contact.id)}
+                          className="btn btn-danger btn-sm"
                         >
-                          Mark as Responded
+                          Delete
                         </button>
-                      )}
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => handleDelete(contact.id)}
-                        className="btn btn-danger btn-sm"
-                      >
-                        Delete
-                      </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center">
+                      No records found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
