@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import logo from '~/assets/static/images/logo/logo.svg'
@@ -19,6 +20,7 @@ const sidebarItems = [
   {
     'name': 'Account',
     'url': '/account',
+    'key': '/account',
     'icon': <MdAccountCircle />
   },
   {
@@ -67,16 +69,10 @@ const sidebarItems = [
   }
 ]
 
-function Sidebar() {
+function Sidebar({ active, toggleSidebar }) {
   const pathname = useLocation().pathname
 
   const sidebarRef = useRef(null)
-  const [active, setActive] = useState(isDesktop(window))
-
-  // eslint-disable-next-line no-unused-vars
-  const toggleSidebar = () => {
-    setActive((prev) => !prev)
-  }
 
   const calculateChildrenHeight = (el, deep = false) => {
     if (!el) return 0
@@ -236,7 +232,7 @@ function Sidebar() {
               </svg>
             </div>
             <div className="sidebar-toggler  x">
-              <a href="#" className="sidebar-hide d-xl-none d-block"><i className="bi bi-x bi-middle"></i></a>
+              <a href="#" className="sidebar-hide d-xl-none d-block"><i className="bi bi-x bi-middle" onClick={toggleSidebar}></i></a>
             </div>
           </div>
         </div>

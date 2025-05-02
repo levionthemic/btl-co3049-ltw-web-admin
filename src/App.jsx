@@ -4,7 +4,7 @@ import '~/assets/scss/themes/dark/app-dark.scss'
 import '~/assets/scss/iconly.scss'
 import { Route, Routes } from 'react-router-dom'
 import Dashboard from '~/pages/Dashboard'
-import Account from '~/pages/Account'
+import Account from '~/pages/Account/Account'
 import Blog from '~/pages/Blog'
 import Faq from '~/pages/Faq/Faq'
 import Room from '~/pages/Room'
@@ -15,6 +15,7 @@ import CustomerPage from './pages/CustomerPage'
 import SettingsPage from './pages/SettingsPage'
 import CreateFaqForm from './pages/Faq/CreateFaqForm'
 import EditFaqForm from './pages/Faq/EditFaqForm'
+import EditAccountForm from '~/pages/Account/EditFaqForm'
 
 function App() {
   useEffect(() => {
@@ -26,7 +27,10 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
+
         <Route path="account" element={<Account />} />
+        <Route path="account/edit/:id" element={<EditAccountForm />} />
+
         <Route path="blog" element={<Blog />} />
 
         <Route path="faq" element={<Faq />} />
