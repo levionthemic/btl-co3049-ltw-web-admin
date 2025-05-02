@@ -2,6 +2,10 @@ import authorizedAxiosInstance from '~/utils/authorizedAxios'
 import { API_ROOT } from '~/utils/constants'
 import { Toast } from '~/utils/toast'
 
+/**
+ * User APIs
+ * @author levi
+ */
 export const loginUserAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/api/auth/login`, data)
   return response
@@ -25,6 +29,21 @@ export const registerUserAPI = async (data) => {
 
 export const refreshTokenAPI = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/api/auth/refresh-token`)
+  return response
+}
+
+export const fetchAllUsersAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/api/admin/users`)
+  return response
+}
+
+export const updateAccountAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/api/admin/user/edit`, data)
+  return response
+}
+
+export const deleteAccountAPI = async (id) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/api/admin/user/delete/${id}`)
   return response
 }
 
