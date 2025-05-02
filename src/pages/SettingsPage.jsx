@@ -17,7 +17,7 @@ const SettingsPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost/public/api/settings/latest")
+      .get("http://localhost/api/settings/latest")
       .then((response) => {
         const data = response.data;
         setFormData({
@@ -26,7 +26,7 @@ const SettingsPage = () => {
           address: data.address || "",
           logo: null,
           currentLogoPath: data.logo_path
-            ? `http://localhost/public/uploads/${data.logo_path}`
+            ? `http://localhost/uploads/${data.logo_path}`
             : "",
         });
       })
@@ -79,7 +79,7 @@ const SettingsPage = () => {
     }
 
     axios
-      .post("http://localhost/public/api/settings", formDataToSend, {
+      .post("http://localhost/api/settings", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -99,7 +99,7 @@ const SettingsPage = () => {
         if (response.data.logo_path) {
           setFormData((prev) => ({
             ...prev,
-            currentLogoPath: `http://localhost/public/uploads/${response.data.logo_path}`,
+            currentLogoPath: `http://localhost/uploads/${response.data.logo_path}`,
           }));
         }
       })
