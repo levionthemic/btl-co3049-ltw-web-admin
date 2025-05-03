@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import logo from '~/assets/static/images/logo/logo.svg'
 import isDesktop from '~/helpers/isDesktop'
 import { MdAccountCircle, MdMeetingRoom, MdSpaceDashboard } from 'react-icons/md'
 import { FaBloggerB, FaHotel, FaQuestion } from 'react-icons/fa6'
 import { IoLogOutOutline, IoSettings } from 'react-icons/io5'
+import { useTheme } from '~/contexts/ThemeContext'
 
 const sidebarItems = [
   {
@@ -195,6 +196,8 @@ function Sidebar({ active, toggleSidebar }) {
     )
   }
 
+  const { toggleTheme } = useTheme()
+
   return (
     <div ref={sidebarRef} id="sidebar" className={`sidebar ${active ? 'active' : 'inactive'}`}>
       <div className="sidebar-wrapper active">
@@ -220,7 +223,7 @@ function Sidebar({ active, toggleSidebar }) {
                 </g>
               </svg>
               <div className="form-check form-switch fs-6">
-                <input className="form-check-input  me-0" type="checkbox" id="toggle-dark" style={{ cursor: 'pointer' }} />
+                <input className="form-check-input  me-0" type="checkbox" id="toggle-dark" style={{ cursor: 'pointer' }} onClick={toggleTheme} />
                 <label className="form-check-label"></label>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
