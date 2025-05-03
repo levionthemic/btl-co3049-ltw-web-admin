@@ -1,6 +1,15 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
 import Chart from 'react-apexcharts'
+import { useAuth } from '~/contexts/AuthContext'
+
+import avatar1 from '~/assets/static/images/faces/1.jpg'
+import avatar2 from '~/assets/static/images/faces/2.jpg'
+import avatar3 from '~/assets/static/images/faces/3.jpg'
+import avatar4 from '~/assets/static/images/faces/4.jpg'
+import avatar5 from '~/assets/static/images/faces/5.jpg'
+import avatar6 from '~/assets/static/images/faces/6.jpg'
+import avatar7 from '~/assets/static/images/faces/7.jpg'
+import avatar8 from '~/assets/static/images/faces/8.jpg'
 
 export const ProfileVisitChart = () => {
   const options = {
@@ -67,6 +76,7 @@ export const MiniAreaChart = ({ title, color }) => {
   return <Chart options={options} series={series} type="area" height={80} />
 }
 function Dashboard() {
+  const { currentUser } = useAuth()
   return (
     <div>
       <div className="page-heading">
@@ -266,7 +276,7 @@ function Dashboard() {
                             <td className="col-3">
                               <div className="d-flex align-items-center">
                                 <div className="avatar avatar-md">
-                                  <img src="~/assets/static/images/faces/5.jpg"/>
+                                  <img src={avatar5} />
                                 </div>
                                 <p className="font-bold ms-3 mb-0">Si Cantik</p>
                               </div>
@@ -279,7 +289,7 @@ function Dashboard() {
                             <td className="col-3">
                               <div className="d-flex align-items-center">
                                 <div className="avatar avatar-md">
-                                  <img src="~/assets/static/images/faces/2.jpg"/>
+                                  <img src={avatar6} />
                                 </div>
                                 <p className="font-bold ms-3 mb-0">Si Ganteng</p>
                               </div>
@@ -293,7 +303,7 @@ function Dashboard() {
                             <td className="col-3">
                               <div className="d-flex align-items-center">
                                 <div className="avatar avatar-md">
-                                  <img src="~/assets/static/images/faces/8.jpg"/>
+                                  <img src={avatar7} />
                                 </div>
                                 <p className="font-bold ms-3 mb-0">Singh Eknoor</p>
                               </div>
@@ -306,7 +316,7 @@ function Dashboard() {
                             <td className="col-3">
                               <div className="d-flex align-items-center">
                                 <div className="avatar avatar-md">
-                                  <img src="~/assets/static/images/faces/3.jpg"/>
+                                  <img src={avatar8} />
                                 </div>
                                 <p className="font-bold ms-3 mb-0">Rani Jhadav</p>
                               </div>
@@ -328,11 +338,11 @@ function Dashboard() {
               <div className="card-body py-4 px-4">
                 <div className="d-flex align-items-center">
                   <div className="avatar avatar-xl">
-                    <img src="~/assets/static/images/faces/1.jpg" alt="Face 1"/>
+                    <img src={avatar1} alt="Face 1"/>
                   </div>
                   <div className="ms-3 name">
-                    <h5 className="font-bold">John Duck</h5>
-                    <h6 className="text-muted mb-0">@johnducky</h6>
+                    <h5 className="font-bold">{currentUser.name}</h5>
+                    <h6 className="text-muted mb-0">Admin</h6>
                   </div>
                 </div>
               </div>
@@ -344,7 +354,7 @@ function Dashboard() {
               <div className="card-content pb-4">
                 <div className="recent-message d-flex px-4 py-3">
                   <div className="avatar avatar-lg">
-                    <img src="~/assets/static/images/faces/4.jpg"/>
+                    <img src={avatar4} />
                   </div>
                   <div className="name ms-4">
                     <h5 className="mb-1">Hank Schrader</h5>
@@ -353,7 +363,7 @@ function Dashboard() {
                 </div>
                 <div className="recent-message d-flex px-4 py-3">
                   <div className="avatar avatar-lg">
-                    <img src="~/assets/static/images/faces/5.jpg"/>
+                    <img src={avatar2} />
                   </div>
                   <div className="name ms-4">
                     <h5 className="mb-1">Dean Winchester</h5>
@@ -362,7 +372,7 @@ function Dashboard() {
                 </div>
                 <div className="recent-message d-flex px-4 py-3">
                   <div className="avatar avatar-lg">
-                    <img src="~/assets/static/images/faces/1.jpg"/>
+                    <img src={avatar3} />
                   </div>
                   <div className="name ms-4">
                     <h5 className="mb-1">John Dodol</h5>
