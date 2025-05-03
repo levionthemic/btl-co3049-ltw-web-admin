@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logo from '~/assets/static/images/logo/logo.svg'
 import isDesktop from '~/helpers/isDesktop'
 import { MdAccountCircle, MdMeetingRoom, MdSpaceDashboard } from 'react-icons/md'
 import { FaBloggerB, FaHotel, FaQuestion } from 'react-icons/fa6'
 import { IoLogOutOutline, IoSettings } from 'react-icons/io5'
 import { useTheme } from '~/contexts/ThemeContext'
+import Swal from 'sweetalert2'
+import { logoutUserAPI } from '~/apis'
+import { useAuth } from '~/contexts/AuthContext'
 
 const sidebarItems = [
   {
@@ -66,6 +69,7 @@ const sidebarItems = [
   {
     'name': 'Logout',
     'url': '/logout',
+    'notItem': true,
     'icon': <IoLogOutOutline />
   }
 ]
@@ -197,6 +201,30 @@ function Sidebar({ active, toggleSidebar }) {
   }
 
   const { toggleTheme } = useTheme()
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = (e) => {
+    e.preventDefault()
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'primary',
+      cancelButtonColor: 'secondary',
+      confirmButtonText: 'Yes, logout!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logoutUserAPI().then((res) => {
+          if (!res.error) {
+            navigate('/login')
+            logout()
+          }
+        })
+      }
+    })
+  }
 
   return (
     <div ref={sidebarRef} id="sidebar" className={`sidebar ${active ? 'active' : 'inactive'}`}>
@@ -247,7 +275,11 @@ function Sidebar({ active, toggleSidebar }) {
                   ? <li className="sidebar-title">{sidebarItem.name}</li>
                   : <li
                     className={`sidebar-item ${(sidebarItem.url === pathname || pathname.startsWith(sidebarItem.key)) ? 'active' : ''} ${sidebarItem?.submenu?.length > 0 ? 'has-sub' : ''}`}>
-                    <Link to={sidebarItem.url!==undefined ? sidebarItem.url : '#'} className='sidebar-link'>
+                    <Link
+                      to={sidebarItem.url!==undefined ? sidebarItem.url : '#'}
+                      className='sidebar-link'
+                      onClick={sidebarItem.notItem && handleLogout}
+                    >
                       {sidebarItem.icon}
                       <span>{sidebarItem.name}</span>
                     </Link>
