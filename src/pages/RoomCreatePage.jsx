@@ -1,13 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { updateRoomAPI } from '~/apis'
+import { createRoomAPI, updateRoomAPI } from '~/apis'
 import { Toast } from '~/utils/toast'
 import { API_ROOT } from '~/utils/constants'
 
-function EditRoom() {
-  const location = useLocation()
+function CreateRoom() {
   const navigate = useNavigate()
-  const room = location.state?.room
   const [file, setFile] = useState(null)
   const [urlFile, setUrlFile] = useState('')
   const [form, setForm] = useState({
@@ -19,10 +17,6 @@ function EditRoom() {
     rating: ''
   })
 
-  useEffect(() => {
-    if (!room) return navigate('/room')
-    setForm(room)
-  }, [room])
 
   const handleChange = (e) => {
     let { name, value } = e.target
@@ -52,7 +46,7 @@ function EditRoom() {
     } else {
       data = form
     }
-    const res = await updateRoomAPI(room.id, data)
+    const res = await createRoomAPI(data)
     if (!res.error) {
       Toast.fire({ icon: 'success', title: 'Room updated successfully!' })
       navigate('/room')
@@ -61,7 +55,7 @@ function EditRoom() {
 
   return (
     <div className="container mt-4">
-      <h2>Edit Room</h2>
+      <h2>Create Room</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Room Name</label>
@@ -85,19 +79,19 @@ function EditRoom() {
         <div className="mb-3">
           <label className="form-label">Image URL</label>
           <input type="file" name="image_url" onChange={handleFileChange} className="form-control" />
-          {form.image_url && <img src= {urlFile || (API_ROOT + form.image_url)} alt="room" style={{ width: 150, marginTop: 10 }} />}
+          {urlFile && <img src= {urlFile} alt="room" style={{ width: 150, marginTop: 10 }} required/>}
         </div>
 
         <div className="mb-3">
           <label className="form-label">Rating</label>
-          <input name="rating" type="number" value={form.rating} onChange={handleChange} className="form-control" step="0.1" min="0" max="5" />
+          <input name="rating" type="number" value={form.rating} onChange={handleChange} className="form-control" step="0.1" min="0" max="5" required/>
         </div>
 
-        <button className="btn btn-primary" type="submit">Update Room</button>
+        <button className="btn btn-primary" type="submit">Create Room</button>
         <button className="btn btn-secondary ms-2" type="button" onClick={() => navigate('/room')}>Cancel</button>
       </form>
     </div>
   )
 }
 
-export default EditRoom
+export default CreateRoom

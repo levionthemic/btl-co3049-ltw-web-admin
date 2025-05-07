@@ -70,7 +70,7 @@ function Room() {
         if (target.matches('.edit-icon')) {
           const row = target.closest('tr')
           const id = row?.querySelector('td')?.textContent
-          navigate(`/room/edit/${id}`, { state: { room: data.find(d => d.id === id) } })
+          navigate(`/room/edit/${id}`, { state: { room: data.find(d => d.id == id) } })
         }
 
         if (target.matches('.delete-icon')) {
@@ -135,6 +135,9 @@ function Room() {
             <h5 className="card-title">
               Account Table
             </h5>
+            <button className="btn btn-success" style={{ cursor: 'pointer' }} onClick={() => navigate('/room/create')}>
+              Insert
+            </button>
           </div>
           <div className="card-body">
             <table className="table table-striped" id="table1" ref={tableRef}>
