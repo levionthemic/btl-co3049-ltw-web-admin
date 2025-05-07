@@ -18,6 +18,7 @@ import EditAccountForm from '~/pages/Account/EditFaqForm'
 import { useAuth } from '~/contexts/AuthContext'
 import Login from '~/pages/Auth/Login'
 import Spinner from '~/components/Spinner/Spinner'
+import EditRoom from './pages/RoomEditPage'
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ user }) => {
@@ -48,6 +49,7 @@ function App() {
           <Route path="faq/edit/:id" element={<EditFaqForm />} />
 
           <Route path="room" element={<Room />} />
+          {/* <Route path="room/edit/:id" element={<EditRoom />} /> */}
           <Route path="booking" element={<Booking />} />
           <Route path="system" element={<System />} />
           <Route path="customer" element={<CustomerPage />} />

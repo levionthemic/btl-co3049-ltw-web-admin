@@ -70,3 +70,15 @@ export const deleteFaqAPI = async (faqId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ROOT}/api/faq/delete/${faqId}`)
   return response
 }
+
+export const getRoomsAPI = async (params) => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/api/rooms`, {
+    params
+  })
+  return response
+}
+
+export const deleteRoomAPI = async (id) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/api/rooms/delete/${id}`)
+  return response
+}
