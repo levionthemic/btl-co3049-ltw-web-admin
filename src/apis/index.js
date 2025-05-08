@@ -70,3 +70,83 @@ export const deleteFaqAPI = async (faqId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ROOT}/api/faq/delete/${faqId}`)
   return response
 }
+
+/**
+ * Blog APIs (RESTful)
+ * @author khiem
+ */
+
+// Lấy danh sách tất cả bài viết
+export const fetchAllNewsAPI = async () => {
+  const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/blog`)
+  return res
+}
+
+// Xem chi tiết bài viết
+export const fetchNewsDetailAPI = async (id) => {
+  const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/blog/${id}`)
+  return res
+}
+
+// Tìm kiếm bài viết
+export const searchNewsAPI = async (keyword) => {
+  const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/blog/search`, {
+    params: { keyword }
+  })
+  return res
+}
+
+// Thêm bài viết
+export const createNewsAPI = async (data, showToast = true) => {
+  const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/blog/create`, data)
+  if (showToast) {
+    Toast.fire({ icon: 'success', text: 'Đã thêm bài viết' })
+  }
+  return res
+}
+
+// Cập nhật bài viết
+export const updateNewsAPI = async (id, data, showToast = true) => {
+  const res = await authorizedAxiosInstance.put(`${API_ROOT}/api/blog/${id}`, data)
+  if (showToast) {
+    Toast.fire({ icon: 'success', text: 'Đã cập nhật bài viết' })
+  }
+  return res
+}
+
+// Xoá bài viết
+export const deleteNewsAPI = async (id, showToast = true) => {
+  const res = await authorizedAxiosInstance.delete(`${API_ROOT}/api/blog/${id}`)
+  if (showToast) {
+    Toast.fire({ icon: 'success', text: 'Đã xoá bài viết' })
+  }
+  return res
+}
+
+/**
+ * Comment APIs (RESTful)
+ */
+
+// Lấy bình luận theo bài viết
+export const fetchCommentsByNewsAPI = async (news_id) => {
+  const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/news/${news_id}/comments`)
+  return res
+}
+
+// Thêm bình luận vào bài viết
+export const createCommentAPI = async (news_id, data, showToast = true) => {
+  const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/news/${news_id}/comments`, data)
+  if (showToast) {
+    Toast.fire({ icon: 'success', text: 'Đã gửi bình luận' })
+  }
+  return res
+}
+
+// Xoá bình luận theo id
+export const deleteCommentAPI = async (id, showToast = true) => {
+  const res = await authorizedAxiosInstance.delete(`${API_ROOT}/api/comments/${id}`)
+  if (showToast) {
+    Toast.fire({ icon: 'success', text: 'Đã xoá bình luận' })
+  }
+  return res
+}
