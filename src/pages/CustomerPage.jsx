@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const CustomerPage = () => {
-  const [contacts, setContacts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [totalContacts, setTotalContacts] = useState(0);
+  const [contacts, setContacts] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [totalContacts, setTotalContacts] = useState(0)
 
   useEffect(() => {
     // Fetch data from the API
@@ -13,80 +13,80 @@ const CustomerPage = () => {
       try {
         const response = await axios.get(
           `http://localhost/api/contacts?page=${currentPage}&limit=${rowsPerPage}`
-        );
+        )
         // alert(JSON.stringify(response.data, null, 2));
-        setContacts(response.data.contacts);
-        setTotalContacts(response.data.total_contacts);
+        setContacts(response.data.contacts)
+        setTotalContacts(response.data.total_contacts)
       } catch (error) {
-        console.error("Error fetching contacts:", error);
-        alert(response.data);
+        console.error('Error fetching contacts:', error)
+        alert(response.data)
       }
-    };
+    }
 
-    fetchContacts();
-  }, [currentPage, rowsPerPage]);
+    fetchContacts()
+  }, [currentPage, rowsPerPage])
 
   const handleMarkAsRead = async (id) => {
     try {
       // Update the status to "read"
       await axios.put(`http://localhost/api/contacts/${id}`, {
-        status: "read",
-      });
+        status: 'read'
+      })
       // Update the local state
       setContacts((prevContacts) =>
         prevContacts.map((contact) =>
-          contact.id === id ? { ...contact, status: "read" } : contact
+          contact.id === id ? { ...contact, status: 'read' } : contact
         )
-      );
+      )
     } catch (error) {
-      console.error("Error updating contact status:", error);
+      console.error('Error updating contact status:', error)
     }
-  };
+  }
 
   const handleMarkAsResponded = async (id) => {
     try {
       // Update the status to "responded"
       await axios.put(`http://localhost/api/contacts/${id}`, {
-        status: "responded",
-      });
+        status: 'responded'
+      })
       // Update the local state
       setContacts((prevContacts) =>
         prevContacts.map((contact) =>
-          contact.id === id ? { ...contact, status: "responded" } : contact
+          contact.id === id ? { ...contact, status: 'responded' } : contact
         )
-      );
+      )
     } catch (error) {
-      console.error("Error updating contact status to responded:", error);
+      console.error('Error updating contact status to responded:', error)
     }
-  };
+  }
 
   const handleDelete = async (id) => {
     try {
       // Delete the contact
       const response = await axios.delete(
         `http://localhost/api/contacts/${id}`
-      );
-      alert(JSON.stringify(response.data, null, 2));
+      )
+      alert(JSON.stringify(response.data, null, 2))
       // Update the local state
       setContacts((prevContacts) =>
         prevContacts.filter((contact) => contact.id !== id)
-      );
+      )
     } catch (error) {
-      console.error("Error deleting contact:", error);
+      console.error('Error deleting contact:', error)
     }
-  };
+  }
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
 
   const handleRowsPerPageChange = (e) => {
-    setRowsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset về trang đầu tiên khi thay đổi số hàng
-  };
+    setRowsPerPage(Number(e.target.value))
+    setCurrentPage(1) // Reset về trang đầu tiên khi thay đổi số hàng
+  }
 
-  const totalPages = Math.ceil(totalContacts / rowsPerPage);
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const totalPages = Math.ceil(totalContacts / rowsPerPage)
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
     <div className="section">
@@ -102,7 +102,7 @@ const CustomerPage = () => {
               className="form-select form-select-sm"
               value={rowsPerPage}
               onChange={handleRowsPerPageChange}
-              style={{ width: "auto" }}
+              style={{ width: 'auto' }}
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -133,14 +133,14 @@ const CustomerPage = () => {
                       <td>
                         <span
                           className={`badge bg-${
-                            contact.status === "unread" ? "warning" : "success"
+                            contact.status === 'unread' ? 'warning' : 'success'
                           }`}
                         >
                           {contact.status}
                         </span>
                       </td>
                       <td>
-                        {contact.status === "unread" && (
+                        {contact.status === 'unread' && (
                           <button
                             onClick={() => handleMarkAsRead(contact.id)}
                             className="btn btn-primary btn-sm"
@@ -148,7 +148,7 @@ const CustomerPage = () => {
                             Mark as Read
                           </button>
                         )}
-                        {contact.status === "read" && (
+                        {contact.status === 'read' && (
                           <button
                             onClick={() => handleMarkAsResponded(contact.id)}
                             className="btn btn-success btn-sm"
@@ -182,7 +182,7 @@ const CustomerPage = () => {
           <nav aria-label="Page navigation" className="mt-4">
             <ul className="pagination justify-content-center">
               <li
-                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
               >
                 <button
                   className="page-link"
@@ -197,7 +197,7 @@ const CustomerPage = () => {
                 <li
                   key={number}
                   className={`page-item ${
-                    currentPage === number ? "active" : ""
+                    currentPage === number ? 'active' : ''
                   }`}
                 >
                   <button
@@ -211,7 +211,7 @@ const CustomerPage = () => {
 
               <li
                 className={`page-item ${
-                  currentPage === totalPages ? "disabled" : ""
+                  currentPage === totalPages ? 'disabled' : ''
                 }`}
               >
                 <button
@@ -227,7 +227,7 @@ const CustomerPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CustomerPage;
+export default CustomerPage

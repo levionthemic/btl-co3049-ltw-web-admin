@@ -29,10 +29,10 @@ function Login() {
   })
 
   const handleLogin = (data) => {
-    loginUserAPI({ ...data, role: 'admin' }).then((res) => {
+    loginUserAPI({ ...data, role: 'admin', rememberMe: false }).then((res) => {
       Toast.fire({
         icon: 'success',
-        text: 'Update Successfully!'
+        text: 'Login Successfully!'
       })
       setUser(res.data.data.user)
       navigate('/')

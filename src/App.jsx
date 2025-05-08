@@ -17,10 +17,13 @@ import CustomerPage from './pages/CustomerPage'
 import SettingsPage from './pages/SettingsPage'
 import CreateFaqForm from './pages/Faq/CreateFaqForm'
 import EditFaqForm from './pages/Faq/EditFaqForm'
+import EditRoom from '~/pages/RoomEditPage'
 import EditAccountForm from '~/pages/Account/EditFaqForm'
 import { useAuth } from '~/contexts/AuthContext'
 import Login from '~/pages/Auth/Login'
 import Spinner from '~/components/Spinner/Spinner'
+import CreateRoom from './pages/RoomCreatePage'
+import { initLogout } from '~/utils/authorizedAxios'
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ user }) => {
@@ -29,7 +32,8 @@ const PrivateRoute = ({ user }) => {
 }
 
 function App() {
-  const { currentUser, isLoading } = useAuth()
+  const { currentUser, isLoading, logout } = useAuth()
+  initLogout(logout)
 
   if (isLoading) return <Spinner />
 
@@ -55,6 +59,8 @@ function App() {
           <Route path="faq/edit/:id" element={<EditFaqForm />} />
 
           <Route path="room" element={<Room />} />
+          <Route path="room/edit/:id" element={<EditRoom />} />
+          <Route path="room/create" element={<CreateRoom />} />
           <Route path="booking" element={<Booking />} />
           <Route path="system" element={<System />} />
           <Route path="customer" element={<CustomerPage />} />
