@@ -20,6 +20,7 @@ import { useAuth } from '~/contexts/AuthContext'
 import Login from '~/pages/Auth/Login'
 import Spinner from '~/components/Spinner/Spinner'
 import CreateRoom from './pages/RoomCreatePage'
+import { initLogout } from '~/utils/authorizedAxios'
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ user }) => {
@@ -28,7 +29,8 @@ const PrivateRoute = ({ user }) => {
 }
 
 function App() {
-  const { currentUser, isLoading } = useAuth()
+  const { currentUser, isLoading, logout } = useAuth()
+  initLogout(logout)
 
   if (isLoading) return <Spinner />
 

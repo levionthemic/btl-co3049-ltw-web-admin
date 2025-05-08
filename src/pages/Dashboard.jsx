@@ -10,6 +10,8 @@ import avatar5 from '~/assets/static/images/faces/5.jpg'
 import avatar6 from '~/assets/static/images/faces/6.jpg'
 import avatar7 from '~/assets/static/images/faces/7.jpg'
 import avatar8 from '~/assets/static/images/faces/8.jpg'
+import { useEffect } from 'react'
+import { testAPI } from '~/apis'
 
 export const ProfileVisitChart = () => {
   const options = {
@@ -77,6 +79,10 @@ export const MiniAreaChart = ({ title, color }) => {
 }
 function Dashboard() {
   const { currentUser } = useAuth()
+
+  useEffect(() => {
+    if (currentUser) testAPI()
+  }, [])
   return (
     <div>
       <div className="page-heading">
