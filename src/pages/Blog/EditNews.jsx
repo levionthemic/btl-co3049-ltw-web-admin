@@ -6,12 +6,14 @@ import { fetchNewsDetailAPI, updateNewsAPI } from '~/apis'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Toast } from '~/utils/toast'
 import { useEffect, useState } from 'react'
+import { API_ROOT } from '~/utils/constants'
 
 function EditNewsForm() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [news, setNews] = useState(null)
+  const [previewImage, setPreviewImage] = useState(null)
 
   const formSchema = z.object({
     title: z.string().min(1, { message: 'Tiêu đề không được để trống!' }),
@@ -19,14 +21,15 @@ function EditNewsForm() {
     status: z.enum(['draft', 'published'], {
       errorMap: () => ({ message: 'Vui lòng chọn trạng thái!' })
     }),
-    image: z.string().url({ message: 'URL ảnh không hợp lệ' }).optional()
+    image: z.any().optional() // File ảnh, không yêu cầu URL
   })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = useForm({
     resolver: zodResolver(formSchema)
   })
@@ -35,12 +38,13 @@ function EditNewsForm() {
     const loadNews = async () => {
       try {
         const res = await fetchNewsDetailAPI(id)
-        setNews(res.data.data)
+        const newsData = res.data.data
+        setNews(newsData)
+        setPreviewImage(newsData.image ? `${API_ROOT}/${newsData.image.replace(/^\/+/, '')}` : null)
         reset({
-          title: res.data.data.title,
-          content: res.data.data.content,
-          status: res.data.data.status || 'draft',
-          image: res.data.data.image
+          title: newsData.title,
+          content: newsData.content,
+          status: newsData.status || 'draft'
         })
       } catch (err) {
         Toast.fire({ icon: 'error', text: 'Không tìm thấy bài viết' })
@@ -53,12 +57,30 @@ function EditNewsForm() {
     loadNews()
   }, [id, navigate, reset])
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file))
+      setValue('image', file) // Cập nhật giá trị image trong form
+    }
+  }
+
   const handleEditNews = async (data) => {
     try {
-      await updateNewsAPI({ ...data, id })
+      const formData = new FormData()
+      formData.append('id', id)
+      formData.append('title', data.title)
+      formData.append('content', data.content)
+      formData.append('status', data.status)
+      if (data.image instanceof File) {
+        formData.append('image', data.image)
+      }
+
+      await updateNewsAPI(formData, id)
       Toast.fire({ icon: 'success', text: 'Cập nhật bài viết thành công!' })
       navigate('/blog')
     } catch (err) {
+      console.error('Update error:', err)
       Toast.fire({ icon: 'error', text: 'Cập nhật thất bại!' })
     }
   }
@@ -101,17 +123,29 @@ function EditNewsForm() {
                 />
                 {errors.content && <p className="text-danger">{errors.content.message}</p>}
               </div>
+
               <div className="form-group">
-                <label htmlFor="image">URL ảnh</label>
+                <label htmlFor="image">Ảnh bài viết</label>
+                {previewImage && (
+                  <div className="mb-3">
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="img-fluid"
+                      style={{ maxWidth: '200px', maxHeight: '200px' }}
+                    />
+                  </div>
+                )}
                 <input
                   id="image"
-                  type="text"
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif"
                   className={clsx('form-control', { 'is-invalid': errors.image })}
-                  {...register('image')}
-                  placeholder="https://example.com/image.jpg"
+                  onChange={handleImageChange}
                 />
                 {errors.image && <p className="text-danger">{errors.image.message}</p>}
               </div>
+
               <div className="form-group">
                 <label>Trạng thái</label>
                 <div className="form-check">
@@ -124,8 +158,6 @@ function EditNewsForm() {
                   />
                   <label className="form-check-label" htmlFor="status_draft">Nháp</label>
                 </div>
-
-
                 <div className="form-check">
                   <input
                     className="form-check-input"

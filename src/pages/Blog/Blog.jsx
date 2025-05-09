@@ -124,7 +124,6 @@ function Blog() {
                   <th>Tiêu đề</th>
                   <th>Mô tả</th>
                   <th>Ngày tạo</th>
-                  <th>Trạng thái</th>
                   <th>Hành động</th>
                 </tr>
               </thead>
@@ -135,7 +134,6 @@ function Blog() {
                     <td>{news.title}</td>
                     <td>{news.description || news.content?.slice(0, 50) + '...'}</td>
                     <td>{news.created_at}</td>
-                    <td>{news.status === 'published' ? 'Đã đăng' : 'Nháp'}</td>
                     <td className="d-flex align-items-center gap-2">
                       <FiEdit className="edit-icon text-warning me-2" style={{ cursor: 'pointer' }} />
                       <RiDeleteBin3Line className="delete-icon text-danger" style={{ cursor: 'pointer' }} />
