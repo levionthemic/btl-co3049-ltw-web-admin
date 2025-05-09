@@ -5,7 +5,10 @@ import '~/assets/scss/iconly.scss'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import Dashboard from '~/pages/Dashboard'
 import Account from '~/pages/Account/Account'
-import Blog from '~/pages/Blog'
+import Blog from '~/pages/Blog/Blog'
+import CreateNews from '~/pages/Blog/CreateNews'
+import EditNews from '~/pages/Blog/EditNews'
+import NewsComments from '~/pages/Blog/NewsComments'
 import Faq from '~/pages/Faq/Faq'
 import Room from '~/pages/Room'
 import Booking from '~/pages/Booking'
@@ -46,6 +49,10 @@ function App() {
           <Route path="account/edit/:id" element={<EditAccountForm />} />
 
           <Route path="blog" element={<Blog />} />
+          <Route path="blog/create" element={<CreateNews />} />
+          <Route path="blog/edit/:id" element={<EditNews />} />
+          <Route path="blog/:id/comments" element={<NewsComments />} />
+
 
           <Route path="faq" element={<Faq />} />
           <Route path="faq/create" element={<CreateFaqForm />} />
