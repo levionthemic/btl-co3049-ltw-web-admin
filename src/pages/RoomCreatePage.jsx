@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { createRoomAPI, updateRoomAPI } from '~/apis'
 import { Toast } from '~/utils/toast'
 import { API_ROOT } from '~/utils/constants'
+import sanitizeInput from '~/utils/inputSanitizer'
 
 function CreateRoom() {
   const navigate = useNavigate()
@@ -38,11 +39,11 @@ function CreateRoom() {
     if (file) {
       data = new FormData()
       data.append('image_url', file)
-      data.append('name', form.name)
-      data.append('description', form.description)
-      data.append('price_per_night', form.price_per_night)
-      data.append('max_guests', form.max_guests)
-      data.append('rating', form.rating)
+      data.append('name', sanitizeInput(form.name) )
+      data.append('description', sanitizeInput(form.description))
+      data.append('price_per_night', sanitizeInput(form.price_per_night))
+      data.append('max_guests',sanitizeInput(form.max_guests))
+      data.append('rating', sanitizeInput(form.rating))
     } else {
       data = form
     }

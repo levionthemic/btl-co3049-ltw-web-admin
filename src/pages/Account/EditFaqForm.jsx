@@ -13,7 +13,7 @@ function EditAccountForm() {
   const navigate = useNavigate()
   const account = useLocation().state.account
 
-  const [imageUrl, setImageUrl] = useState(account.avatar ? (API_ROOT + account?.avatar) : null)
+  const [imageUrl, setImageUrl] = useState(account?.avatar ? (API_ROOT + account?.avatar) : null)
   const [imageFile, setImageFile] = useState(null)
   const handleInputAvatarChange = (e) => {
     const file = e.target.files[0]
