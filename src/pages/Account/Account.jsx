@@ -70,7 +70,7 @@ function Account() {
         if (target.matches('.edit-icon')) {
           const row = target.closest('tr')
           const id = row?.querySelector('td')?.textContent
-          navigate(`/account/edit/${id}`, { state: { account: data.find(d => d.id === id) } })
+          navigate(`/account/edit/${id}`, { state: { account: data.find(d => d.id == id) } })
         }
 
         if (target.matches('.delete-icon')) {
