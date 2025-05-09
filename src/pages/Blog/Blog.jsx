@@ -10,6 +10,8 @@ import { FiEdit } from 'react-icons/fi'
 import { RiDeleteBin3Line } from 'react-icons/ri'
 import Swal from 'sweetalert2'
 import { Toast } from '~/utils/toast'
+import { BiCommentDetail } from 'react-icons/bi'
+
 
 function Blog() {
   const tableRef = useRef(null)
@@ -42,43 +44,59 @@ function Blog() {
   }, [])
 
   useEffect(() => {
+    tableRef.current.addEventListener('click', function (e) {
+      const target = e.target
+      const row = target.closest('tr')
+      const id = row?.getAttribute('data-id')
+
+      if (!id) return
+
+      if (target.closest('.edit-icon')) {
+        navigate(`/blog/edit/${id}`)
+      }
+
+      if (target.closest('.delete-icon')) {
+        Swal.fire({
+          title: 'Xoá bài viết?',
+          text: 'Bạn có chắc muốn xoá bài viết này?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Xoá',
+          cancelButtonText: 'Huỷ'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteNewsAPI(id).then(() => {
+              setData(prev => prev.filter(news => news.id.toString() !== id))
+              Toast.fire({ icon: 'success', title: 'Đã xoá bài viết.' })
+            })
+          }
+        })
+      }
+
+      if (target.closest('.comment-icon')) {
+        navigate(`/blog/${id}/comments`)
+      }
+    })
+
     if (!tableRef.current || !data.length) return
 
+    // Xoá bảng cũ nếu có
     if (dataTableRef.current) {
       dataTableRef.current.destroy()
+      dataTableRef.current = null
     }
 
-    dataTableRef.current = new DataTable(tableRef.current)
+    // Khởi tạo lại bảng mới
+    dataTableRef.current = new DataTable(tableRef.current, {
+      searchable: true,
+      perPageSelect: [5, 10, 20],
+      perPage: 10
+    })
 
     return () => {
       dataTableRef.current?.destroy()
     }
   }, [data])
-
-  const handleEdit = (id) => {
-    navigate(`/blog/editnews/${id}`)
-  }
-
-  const handleDelete = async (id) => {
-    const confirm = await Swal.fire({
-      title: 'Xoá bài viết?',
-      text: 'Bạn có chắc muốn xoá bài viết này?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xoá',
-      cancelButtonText: 'Huỷ'
-    })
-
-    if (confirm.isConfirmed) {
-      try {
-        await deleteNewsAPI(id)
-        setData(prev => prev.filter(news => news.id !== id))
-        Toast.fire({ icon: 'success', title: 'Đã xoá bài viết.' })
-      } catch (err) {
-        Toast.fire({ icon: 'error', title: 'Xoá thất bại.' })
-      }
-    }
-  }
 
   return (
     <div className="page-heading">
@@ -87,22 +105,16 @@ function Blog() {
       </div>
       <section className="section">
         <div className="card">
-          <div className="card-header d-flex justify-between items-center">
-            <h5>Danh sách bài viết</h5>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Tìm bài viết..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              />
-              <button className="btn btn-primary" onClick={() => navigate('/blog/create')}>
-                Thêm bài viết
-              </button>
-            </div>
+          <div className="card-header flex justify-between items-center w-full">
+            <h5 className="text-lg font-semibold flex-shrink-0">Danh sách bài viết</h5>
+            <button
+              className="btn btn-primary flex-grow"
+              onClick={() => navigate('/blog/create')}
+            >
+            Thêm bài viết
+            </button>
           </div>
+
 
           <div className="card-body">
             <table ref={tableRef} className="table table-striped" id="table-news">
@@ -125,22 +137,15 @@ function Blog() {
                     <td>{news.created_at}</td>
                     <td>{news.status === 'published' ? 'Đã đăng' : 'Nháp'}</td>
                     <td className="d-flex align-items-center gap-2">
-                      <FiEdit
-                        className="text-warning"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleEdit(news.id)}
-                      />
-                      <RiDeleteBin3Line
-                        className="text-danger"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleDelete(news.id)}
-                      />
-                      <button
+                      <FiEdit className="edit-icon text-warning me-2" style={{ cursor: 'pointer' }} />
+                      <RiDeleteBin3Line className="delete-icon text-danger" style={{ cursor: 'pointer' }} />
+                      <BiCommentDetail className="comment-icon text-info" style={{ cursor: 'pointer' }} />
+                      {/*<button
                         className="btn btn-sm btn-outline-secondary"
-                        onClick={() => navigate(`/admin/news/${news.id}/comments`)}
+                        onClick={() => navigate(`/blog/${news.id}/comments`)}
                       >
                         Bình luận
-                      </button>
+                      </button>*/}
                     </td>
                   </tr>
                 ))}
