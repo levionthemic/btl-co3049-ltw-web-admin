@@ -232,7 +232,8 @@ function Sidebar({ active, toggleSidebar }) {
         <div className="sidebar-header position-relative">
           <div className="d-flex justify-content-between align-items-center">
             <div className="logo">
-              <a href="/"><img src={logo} alt="Logo" srcSet="" /></a>
+              ADMIN
+              {/* <a href="/"><img src={logo} alt="Logo" srcSet="" /></a> */}
             </div>
             <div className="theme-toggle d-flex gap-2  align-items-center mt-2">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
