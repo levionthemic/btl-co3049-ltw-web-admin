@@ -116,14 +116,14 @@ function Room() {
       <div className="page-title">
         <div className="row">
           <div className="col-12 col-md-6 order-md-1 order-last">
-            <h3>Accounts</h3>
-            <p className="text-subtitle text-muted">Manage Account section</p>
+            <h3>Rooms</h3>
+            <p className="text-subtitle text-muted">Manage Room section</p>
           </div>
           <div className="col-12 col-md-6 order-md-2 order-first">
             <nav aria-label="breadcrumb" className="breadcrumb-header float-start float-lg-end">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/">Dashboard</Link></li>
-                <li className="breadcrumb-item active" aria-current="page">Account</li>
+                <li className="breadcrumb-item active" aria-current="page">Room</li>
               </ol>
             </nav>
           </div>
@@ -133,7 +133,7 @@ function Room() {
         <div className="card">
           <div className="card-header d-flex align-item-center justify-content-between">
             <h5 className="card-title">
-              Account Table
+              Room Table
             </h5>
             <button className="btn btn-success" style={{ cursor: 'pointer' }} onClick={() => navigate('/room/create')}>
               Insert

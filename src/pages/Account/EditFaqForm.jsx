@@ -12,8 +12,9 @@ import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, 
 function EditAccountForm() {
   const navigate = useNavigate()
   const account = useLocation().state.account
+  console.log(account);
 
-  const [imageUrl, setImageUrl] = useState(account.avatar ? (API_ROOT + account?.avatar) : null)
+  const [imageUrl, setImageUrl] = useState(account?.avatar ? (API_ROOT + account?.avatar) : null)
   const [imageFile, setImageFile] = useState(null)
   const handleInputAvatarChange = (e) => {
     const file = e.target.files[0]

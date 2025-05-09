@@ -68,7 +68,7 @@ function Faq() {
         if (target.matches('.edit-icon')) {
           const row = target.closest('tr')
           const id = row?.querySelector('td')?.textContent
-          navigate(`/faq/edit/${id}`, { state: { faq: data.find(d => d.id === id) } })
+          navigate(`/faq/edit/${id}`, { state: { faq: data.find(d => d.id == id) } })
         }
 
         if (target.matches('.delete-icon')) {
