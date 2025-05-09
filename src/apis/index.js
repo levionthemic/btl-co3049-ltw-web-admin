@@ -115,7 +115,7 @@ export const createNewsAPI = async (data, showToast = true) => {
 
 // Cập nhật bài viết
 export const updateNewsAPI = async (data, id, showToast = true) => {
-  const res = await authorizedAxiosInstance.put(`${API_ROOT}/api/blog/${id}`, data)
+  const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/blog/${id}`, data)
   if (showToast) {
     Toast.fire({ icon: 'success', text: 'Đã cập nhật bài viết' })
   }

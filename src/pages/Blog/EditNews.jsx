@@ -75,7 +75,7 @@ function EditNewsForm() {
       if (data.image instanceof File) {
         formData.append('image', data.image)
       }
-
+      formData.append('_method', 'PUT')
       await updateNewsAPI(formData, id)
       Toast.fire({ icon: 'success', text: 'Cập nhật bài viết thành công!' })
       navigate('/blog')
