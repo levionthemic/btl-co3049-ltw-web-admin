@@ -13,8 +13,11 @@ function CreateNewsForm() {
     title: z.string().min(1, { message: 'Tiêu đề không được để trống!' }),
     content: z.string().min(1, { message: 'Nội dung không được để trống!' }),
     image: z
-      .string()
-      .url({ message: 'Ảnh phải là một URL hợp lệ!' })
+      .instanceof(File)
+      .refine((file) => file.size <= 5 * 1024 * 1024, { message: 'Ảnh phải nhỏ hơn 5MB!' })
+      .refine((file) => ['image/jpeg', 'image/png', 'image/gif'].includes(file.type), {
+        message: 'Chỉ hỗ trợ định dạng JPEG, PNG hoặc GIF!'
+      })
       .optional(),
     author_id: z.coerce.number().optional()
   })
@@ -22,20 +25,31 @@ function CreateNewsForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
       content: '',
-      image: '',
+      image: undefined,
       author_id: undefined
     }
   })
 
   const handleCreateNews = async (data) => {
     try {
-      await createNewsAPI(data)
+      const formData = new FormData()
+      formData.append('title', data.title)
+      formData.append('content', data.content)
+      if (data.image) {
+        formData.append('image', data.image)
+      }
+      if (data.author_id) {
+        formData.append('author_id', data.author_id)
+      }
+
+      await createNewsAPI(formData)
       Toast.fire({ icon: 'success', text: 'Đã tạo bài viết thành công!' })
       navigate('/blog')
     } catch (error) {
@@ -87,13 +101,16 @@ function CreateNewsForm() {
 
               {/* image */}
               <div className="form-group">
-                <label htmlFor="image">URL ảnh minh họa</label>
+                <label htmlFor="image">Ảnh minh họa</label>
                 <input
                   id="image"
-                  type="text"
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif"
                   className={clsx('form-control', { 'is-invalid': errors.image })}
-                  {...register('image')}
-                  placeholder="VD: https://example.com/image.jpg"
+                  onChange={(e) => {
+                    const file = e.target.files[0]
+                    setValue('image', file, { shouldValidate: true })
+                  }}
                 />
                 {errors.image && <p className="text-danger">{errors.image.message}</p>}
               </div>
